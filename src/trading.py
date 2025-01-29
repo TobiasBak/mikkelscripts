@@ -1,5 +1,6 @@
 import pyautogui as pya
 import time
+import mouse
 
 import config
 
@@ -64,14 +65,14 @@ def locate_red_gems() -> list:
 
 
 def start_gem_trades(list_of_gem_locations: list):
-    # This method will click on the gem locations in the list
-    # It will click on the gem, then click on the confirm button
-    # Then it will wait for the trade to finish
-    # Then it will click on the trade button again
+    if not list_of_gem_locations:
+        return
+    
     delta_x = 610
     for coordinate in list_of_gem_locations:
         x,y = coordinate
-        pya.click((x + delta_x), y)
+        mouse.move((x + delta_x), y)
+        pya.click()
 
 def refresh_trades():
     screen_area = Config["settings"]["region"]
@@ -89,4 +90,5 @@ def refresh_trades():
             break
     
     if refresh:
-        pya.click(450, 840)
+        mouse.move(450, 840)
+        pya.click()
