@@ -1,3 +1,4 @@
 pyautogui==0.9.54
 keyboard==0.13.5
 mouse==0.7.1
+pillow==11.1.0

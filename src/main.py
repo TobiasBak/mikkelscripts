@@ -30,7 +30,7 @@ def print_coordinates():
 
 if __name__ == "__main__":
     print('Starting Scripts')
-    #print_coordinates()
+    print_coordinates()
     
     print('Press Ctrl-Shift-F11 to quit.')
     try:
