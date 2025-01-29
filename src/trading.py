@@ -1,7 +1,6 @@
 import time
 import mouse
 import pyautogui
-import pydirectinput
 
 import config
 from utils import leftclick
