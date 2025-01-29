@@ -8,6 +8,7 @@ Config = {
         "trade": "y"
     },
     "trading": {
-        "delay_in_seconds": 2  
+        "delay_in_seconds": 2,
+        "trading_coordinates": [(940, 315), (940, 400), (940, 480), (940, 570), (940, 650), (940, 740)]  
     }
 }

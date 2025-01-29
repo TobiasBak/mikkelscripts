@@ -23,33 +23,70 @@ def trading_main():
         pya.press(trade_key)
         
         # Run code
-        locate_red_gems()
+        gem_locations: list = locate_red_gems()
+        start_gem_trades(gem_locations)
+        refresh_trades()
 
         # Close trade ui
         last_trade_time = time.time()
         pya.press(trade_key)
 
-def locate_red_gems():
+def locate_red_gems() -> list:
     # This method has to go over the screen coordinates covering the column of purchasable
     # If any item is red, it will save the coordinates of the red gem. 
     # A gem is red if the pixel color is (255, 0, 68)
     # Any pixels close to a red pixel found should never be checked again
     # Instead of checking all pixels on screen, we check every 10 pixels
 
-    pixel_gap = 10
+    out: list = []
+
     screen_area = Config["settings"]["region"]
-
+    trading_coordinates_list = Config["trading"]["trading_coordinates"]
     screen = pya.screenshot(region=screen_area)
-    width, height = screen.size
 
-    positions = []
+    start_pos_delta_x = 610
     
-    for x in range(0, width, pixel_gap):
-        for y in range(0, height, pixel_gap):
-            color = screen.getpixel((x, y))
-            if color == (255, 0, 68):
-                print(f"Red gem found at {x}, {y}")
-                # Click on the red gem
-                positions.append((x, y))
+    for coordinate in trading_coordinates_list:
+        x, y = coordinate
+
+        # check if pixel is red
+        pixel_color = screen.getpixel((x, y))
+        if not pixel_color == (255, 0, 68):
+            return
+            
+        start_pixel_color = screen.getpixel((x + start_pos_delta_x, y))
+        if start_pixel_color == (255, 241, 210):
+            out.append(coordinate)
+        
     
-    print(f"Red gems found at: {positions}")
+    print(f"Red gems found at: {out}")
+    return out
+
+
+def start_gem_trades(list_of_gem_locations: list):
+    # This method will click on the gem locations in the list
+    # It will click on the gem, then click on the confirm button
+    # Then it will wait for the trade to finish
+    # Then it will click on the trade button again
+    delta_x = 610
+    for coordinate in list_of_gem_locations:
+        x,y = coordinate
+        pya.click((x + delta_x), y)
+
+def refresh_trades():
+    screen_area = Config["settings"]["region"]
+    trading_coordinates_list = Config["trading"]["trading_coordinates"]
+    screen = pya.screenshot(region=screen_area)
+
+    delta_x = 610
+
+    refresh = False
+
+    for coordinate in trading_coordinates_list:
+        x, y = coordinate
+        if screen.getpixel((x + delta_x, y)) == (255, 241, 210) or screen.getpixel((x + delta_x, y)) == (200, 189, 165):
+            refresh = True
+            break
+    
+    if refresh:
+        pya.click(450, 840)
